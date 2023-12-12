@@ -28,19 +28,22 @@ app.get("/", async (req, res) => {
     countries.push(country.country_code);
   });
   console.log(result.rows);
-  res.render("index.ejs", { countries: countries, total: countries.length });
-  db.end();
+  res.render("index.ejs", { countries: countries, total: countries.length });  
 });
 
 //Handle user input
 app.post("/add", async (req, res) =>{
   let countryName = req.body.country.trim();
   let locations = [];
-  const countryNames = await db.query("SELECT country_name FROM countries");
-  // countryNames.rows.forEach((name) => {
-  //     locations.push(name.country_name)      
-  // });
-  console.log(countryName);  
+
+  const countryNames = await db.query("SELECT * FROM countries");
+  countryNames.rows.forEach((name) => {
+    if(countryName === name.country_name) {
+      locations.push(name.country_code);
+    }      
+  });
+  console.log(locations);  
+  db.end();
 });
 
 
